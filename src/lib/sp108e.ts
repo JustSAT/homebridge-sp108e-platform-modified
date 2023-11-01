@@ -8,6 +8,7 @@ import { PromiseSocket } from 'promise-socket';
 import { ANIMATION_MODES, ANIMATION_MODE_STATIC } from './animationModes';
 import { CHIP_TYPES } from './chipTypes';
 import { COLOR_ORDERS } from './colorOrders';
+import { Sp108ePlatformAccessory } from '../platformAccessory';
 
 // TODO: find out these values?
 const WARM_WHITE = 'ff6717';
@@ -65,8 +66,9 @@ export interface sp108eStatus {
 }
 
 export default class sp108e {
-  constructor(private readonly options: sp108eOptions) {
+  constructor(private readonly options: sp108eOptions, private readonly accessory: Sp108ePlatformAccessory) {
     this.options = options;
+    this.accessory = accessory;
   }
 
   setChipType = async (chipType: string) => {
@@ -212,6 +214,7 @@ export default class sp108e {
   setDreamMode = async (mode) => {
     let truncated = Math.min(mode, 180);
     truncated = Math.max(truncated, 1);
+    this.accessory.isDebuggEnabled && this.accessory.platform.log.info('set dream mode ->', mode);
     return await this.send(CMD_SET_DREAM_MODE, this.intToHex(mode - 1), 0);
   };
 

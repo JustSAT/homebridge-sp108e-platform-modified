@@ -16,7 +16,10 @@ const DREAM_MODE_NUMBER = 1;
  * Each accessory may expose multiple services of different service types.
  */
 export class Sp108ePlatformAccessory {
+  public readonly platform: Sp108ePlatform;
+  public readonly isDebuggEnabled: boolean;
   private debug: boolean;
+
   private rgbOn: boolean;
   private dreamModeAnimationNumber: number;
   private device: sp108e;
@@ -32,17 +35,20 @@ export class Sp108ePlatformAccessory {
   private animationOn!: boolean;
 
   constructor(
-    private readonly platform: Sp108ePlatform,
+    platform: Sp108ePlatform,
     private readonly accessory: PlatformAccessory,
   ) {
+    this.platform = platform;
+    
     this.debug = accessory.context.device.debug;
+    this.isDebuggEnabled = this.debug;
     this.rgbOn = false;
     this.dreamModeAnimationNumber = accessory.context.device.dreamModeAnimationNumber;
 
     this.platform.log.info(accessory.context.device);
 
     // instantiate sp108e
-    this.device = new sp108e(accessory.context.device);
+    this.device = new sp108e(accessory.context.device, this);
 
     const serialNumberBase = `${accessory.context.device.host}:${accessory.context.device.port}`;
 
