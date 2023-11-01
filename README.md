@@ -1,4 +1,4 @@
-# homebridge-sp108e-platform
+# homebridge-sp108e-platform-modified
 
 [![version](https://img.shields.io/npm/v/homebridge-sp108e-platform.svg)](https://www.npmjs.com/package/homebridge-sp108e-platform)
 [![downloads](https://img.shields.io/npm/dt/homebridge-sp108e-platform.svg)](https://www.npmjs.com/package/homebridge-sp108e-platform)
