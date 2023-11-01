@@ -1,15 +1,15 @@
 {
-  "displayName": "Homebridge SP108E Platform",
-  "name": "homebridge-sp108e-platform",
-  "version": "1.1.3",
-  "description": "Integrate your SP108E LED controllers into HomeKit",
+  "displayName": "Homebridge SP108E Platform (Modified)",
+  "name": "homebridge-sp108e-platform-modified",
+  "version": "1.1.4",
+  "description": "Integrate your SP108E LED controllers into HomeKit. Added dream mode number configuration",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/whatUwant/homebridge-sp108e-platform.git"
+    "url": "git://github.com/JustSAT/homebridge-sp108e-platform-modified.git"
   },
   "bugs": {
-    "url": "https://github.com/whatUwant/homebridge-sp108e-platform/issues"
+    "url": "https://github.com/JustSAT/homebridge-sp108e-platform-modified"
   },
   "engines": {
     "node": ">=10.17.0",

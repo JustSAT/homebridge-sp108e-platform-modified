@@ -18,6 +18,7 @@ const DREAM_MODE_NUMBER = 1;
 export class Sp108ePlatformAccessory {
   private debug: boolean;
   private rgbOn: boolean;
+  private dreamModeAnimationNumber: number;
   private device: sp108e;
   private rgbService: Service;
   private wService!: Service;
@@ -36,6 +37,7 @@ export class Sp108ePlatformAccessory {
   ) {
     this.debug = accessory.context.device.debug;
     this.rgbOn = false;
+    this.dreamModeAnimationNumber = accessory.context.device.dreamModeAnimationNumber;
 
     this.platform.log.info(accessory.context.device);
 
@@ -334,7 +336,7 @@ export class Sp108ePlatformAccessory {
 
       this.animationOn = Boolean(value);
       value
-        ? this.device.setDreamModeAuto()
+        ? this.device.setDreamMode(this.dreamModeAnimationNumber)
         : this.device.setAnimationMode(ANIMATION_MODE_STATIC);
 
       this.debug && this.platform.log.info('Set Characteristic Active of as/md ->', value);
@@ -347,7 +349,7 @@ export class Sp108ePlatformAccessory {
     try {
       this.platform.log.info('Checking animation mode', value, value.toString(), ANIMATION_MODES[value.toString()]);
       if (typeof ANIMATION_MODES[value.toString()] === 'undefined') {
-        await this.device.setDreamModeAuto();
+        await this.device.setDreamMode(this.dreamModeAnimationNumber);
       } else {
         await this.device.setAnimationMode(value as number);
       }

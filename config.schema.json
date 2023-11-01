@@ -102,6 +102,15 @@
               "required": true,
               "minimum": 1
             },
+            "dreamModeAnimationNumber" {
+              "title": "Dream Mode Animation Number",
+              "type": "integer",
+              "required": false,
+              "minimum": 1,
+              "maximum": 180,
+              "default": 1,
+              "placeholder": "1-180, default - 1"
+            },
             "debug": {
               "title": "Debug",
               "type": "boolean",

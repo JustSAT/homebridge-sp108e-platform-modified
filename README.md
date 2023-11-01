@@ -14,6 +14,7 @@ A homebridge plugin for integrating SP108E LED controllers into HomeKit.
 - multiple-instance support
 - controller chip type / RGB channel order / segment amount / LEDs per segment settings in configuation
 - RGBW LED strip as two separate lights (RGB + W)
+- Dream Mode configuration
 
 ## Credits
 
