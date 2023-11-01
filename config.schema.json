@@ -102,14 +102,15 @@
               "required": true,
               "minimum": 1
             },
-            "dreamModeAnimationNumber" {
+            "dreamModeAnimationNumber": {
               "title": "Dream Mode Animation Number",
               "type": "integer",
               "required": false,
-              "minimum": 1,
-              "maximum": 180,
+              "placeholder": "1-180, default - 1",
               "default": 1,
-              "placeholder": "1-180, default - 1"
+              "description": "Animation number for dream mode",
+              "minimum": 1,
+              "maximum": 180
             },
             "debug": {
               "title": "Debug",
