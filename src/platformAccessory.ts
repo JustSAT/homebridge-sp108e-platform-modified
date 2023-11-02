@@ -39,9 +39,10 @@ export class Sp108ePlatformAccessory {
     private readonly accessory: PlatformAccessory,
   ) {
     this.platform = platform;
-    
+
     this.debug = accessory.context.device.debug;
     this.isDebuggEnabled = this.debug;
+    
     this.rgbOn = false;
     this.dreamModeAnimationNumber = accessory.context.device.dreamModeAnimationNumber;
 
