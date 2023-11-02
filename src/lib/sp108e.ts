@@ -5,7 +5,7 @@
 import * as net from 'net';
 import colorConvert from 'color-convert';
 import { PromiseSocket } from 'promise-socket';
-import { ANIMATION_MODES, ANIMATION_MODE_STATIC } from './animationModes';
+import { ANIMATION_MODES, ANIMATION_MODE_STATIC, ALL_ANIMATION_MODES } from './animationModes';
 import { CHIP_TYPES } from './chipTypes';
 import { COLOR_ORDERS } from './colorOrders';
 import { Sp108ePlatformAccessory } from '../platformAccessory';

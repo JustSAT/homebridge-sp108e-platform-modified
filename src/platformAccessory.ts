@@ -1,6 +1,6 @@
 import { Service, PlatformAccessory, CharacteristicValue } from 'homebridge';
 import colorConvert from 'color-convert';
-import { ANIMATION_MODES, ANIMATION_MODE_STATIC } from './lib/animationModes';
+import { ANIMATION_MODES, ANIMATION_MODE_STATIC, ALL_ANIMATION_MODES } from './lib/animationModes';
 import sp108e, { sp108eStatus } from './lib/sp108e';
 import { Sp108ePlatform } from './platform';
 import { MANUFACTURER, MODEL } from './settings';
@@ -42,7 +42,7 @@ export class Sp108ePlatformAccessory {
 
     this.debug = accessory.context.device.debug;
     this.isDebuggEnabled = this.debug;
-    
+
     this.rgbOn = false;
     this.dreamModeAnimationNumber = accessory.context.device.dreamModeAnimationNumber;
 
@@ -116,7 +116,7 @@ export class Sp108ePlatformAccessory {
       .getCharacteristic(this.platform.Characteristic.ActiveIdentifier)
       .onSet(this.setAnimationMode.bind(this));
 
-    const animationModes = Object.entries({ [DREAM_MODE_NUMBER]: 'DREAM_MODE', ...ANIMATION_MODES });
+    const animationModes = Object.entries({ ...ALL_ANIMATION_MODES });
     for (const [animationMode, animationModeName] of animationModes) {
       if (animationMode === ANIMATION_MODE_STATIC.toString()) {
         continue;
@@ -188,7 +188,7 @@ export class Sp108ePlatformAccessory {
         this.platform.api.hap.Characteristic.Active.INACTIVE;
 
       let animationMode = this.deviceStatus.animationMode;
-      if (typeof ANIMATION_MODES[this.deviceStatus.animationMode] === 'undefined') {
+      if (typeof ALL_ANIMATION_MODES[this.deviceStatus.animationMode] === 'undefined') {
         this.debug && this.platform.log.info('Get Characteristic ActiveIdentifier of md ->', DREAM_MODE_NUMBER);
         animationMode = DREAM_MODE_NUMBER;
       }
@@ -354,14 +354,15 @@ export class Sp108ePlatformAccessory {
 
   async setAnimationMode(value: CharacteristicValue) {
     try {
-      this.platform.log.info('Checking animation mode', value, value.toString(), ANIMATION_MODES[value.toString()]);
-      if (typeof ANIMATION_MODES[value.toString()] === 'undefined') {
+      const truncValue = (value as number) % 180 as CharacteristicValue;
+      this.platform.log.info('Checking animation mode', value, truncValue.toString(), ALL_ANIMATION_MODES[truncValue.toString()]);
+      if (typeof ALL_ANIMATION_MODES[truncValue.toString()] === 'undefined') {
         await this.device.setDreamMode(this.dreamModeAnimationNumber);
       } else {
-        await this.device.setAnimationMode(value as number);
+        await this.device.setAnimationMode(truncValue as number);
       }
 
-      this.debug && this.platform.log.info('Set Characteristic ActiveIdentifier of md ->', value);
+      this.debug && this.platform.log.info('Set Characteristic ActiveIdentifier of md ->', truncValue);
     } catch (e) {
       throw new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
     }
