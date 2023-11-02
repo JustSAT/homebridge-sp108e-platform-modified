@@ -1,6 +1,6 @@
 import { Service, PlatformAccessory, CharacteristicValue } from 'homebridge';
 import colorConvert from 'color-convert';
-import { ANIMATION_MODES, ANIMATION_MODE_STATIC, ALL_ANIMATION_MODES } from './lib/animationModes';
+import { ANIMATION_MODE_STATIC, ALL_ANIMATION_MODES } from './lib/animationModes';
 import sp108e, { sp108eStatus } from './lib/sp108e';
 import { Sp108ePlatform } from './platform';
 import { MANUFACTURER, MODEL } from './settings';
