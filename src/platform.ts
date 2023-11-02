@@ -76,12 +76,13 @@ export class Sp108ePlatform implements DynamicPlatformPlugin {
       const existingAccessory = this.accessories.find(accessory => accessory.UUID === uuid);
 
       if (existingAccessory) {
-        // create a new accessory
-        const accessory = new this.api.platformAccessory(device.name, uuid);
-        existingAccessory.context = accessory.context;
-
         // the accessory already exists
         this.log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
+        this.log.info('Context:', existingAccessory.context);
+
+        // create a new accessory
+        const accessory = new this.api.platformAccessory(device.name, uuid);
+        this.log.info('test:', accessory.context);
 
         // if you need to update the accessory.context then you should run `api.updatePlatformAccessories`. eg.:
         // existingAccessory.context.device = device;
