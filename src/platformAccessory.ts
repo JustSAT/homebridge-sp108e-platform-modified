@@ -182,9 +182,9 @@ export class Sp108ePlatformAccessory {
       this.deviceStatus = await this.device.getStatus();
       this.lastPull = new Date();
 
-      this.rgbOn = this.deviceStatus.brightnessPercentage > 0;
+      this.rgbOn = this.deviceStatus.on;
 
-      const animationModeOn = this.deviceStatus.animationMode !== ANIMATION_MODE_STATIC ?
+      const animationModeOn = this.deviceStatus.animationMode !== ANIMATION_MODE_STATIC && this.deviceStatus.on ?
         this.platform.api.hap.Characteristic.Active.ACTIVE :
         this.platform.api.hap.Characteristic.Active.INACTIVE;
 
@@ -243,25 +243,16 @@ export class Sp108ePlatformAccessory {
       await this.device.getStatus();
 
       if (Boolean(value) === true) {
-        // Check if device already on
-        if (Boolean(value) === this.rgbOn && this.deviceStatus.on) {
-          this.debug && this.platform.log.info('Characteristic On is already ->', value);
-          return;
-        }
+        this.platform.log.info('Settings device ON');
         // Set device on
         await this.device.on();
       } else {
-        if (Boolean(value) === this.rgbOn && !this.deviceStatus.on) {
-          this.debug && this.platform.log.info('Characteristic On is already ->', value);
-          return;
-        }
+        this.platform.log.info('Settings device OFF');
         // Set device off
         await this.device.off();
       }
       // Sync local rgb status
       this.rgbOn = Boolean(value);
-
-      this.debug && this.platform.log.info('Set Characteristic On ->', value);
     } catch (e) {
       throw new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
     }
@@ -269,9 +260,13 @@ export class Sp108ePlatformAccessory {
 
   async setBrightness(value: CharacteristicValue) {
     try {
+      if (!this.deviceStatus.on) {
+        await this.device.on();
+      }
+
       await this.device.setBrightnessPercentage(value as number);
 
-      this.debug && this.platform.log.info('Set Characteristic Brightness ->', value);
+      this.platform.log.info('Set Characteristic Brightness ->', value);
     } catch (e) {
       throw new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
     }
@@ -352,6 +347,10 @@ export class Sp108ePlatformAccessory {
         return;
       }
 
+      if (!this.deviceStatus.on) {
+        await this.device.on();
+      }
+
       this.animationOn = Boolean(value);
       value
         ? this.device.setDreamMode(this.dreamModeAnimationNumber)
@@ -367,6 +366,11 @@ export class Sp108ePlatformAccessory {
     try {
       const truncValue = (value as number) % 180 as CharacteristicValue;
       this.platform.log.info('Checking animation mode', value, truncValue.toString(), ALL_ANIMATION_MODES[truncValue.toString()]);
+
+      if (!this.deviceStatus.on) {
+        await this.device.on();
+      }
+
       if (typeof ALL_ANIMATION_MODES[truncValue.toString()] === 'undefined') {
         await this.device.setDreamMode(this.dreamModeAnimationNumber);
       } else {
