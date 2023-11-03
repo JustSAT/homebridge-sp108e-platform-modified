@@ -69,6 +69,7 @@ export class Sp108ePlatformAccessory {
     this.rgbService.getCharacteristic(this.platform.Characteristic.On)
       .onSet(this.setOn.bind(this));
 
+
     this.rgbService.getCharacteristic(this.platform.Characteristic.Brightness)
       .onSet(this.setBrightness.bind(this));
 
@@ -237,17 +238,27 @@ export class Sp108ePlatformAccessory {
   }
 
   async setOn(value: CharacteristicValue) {
-    if (Boolean(value) === this.rgbOn && this.deviceStatus.on) {
-      this.debug && this.platform.log.info('Characteristic On is already ->', value);
-      return;
-    }
-
     try {
-      if (!this.deviceStatus.on) {
-        await this.device.on();
-      }
+      // Sync device status
+      await this.device.getStatus();
 
-      await this.setBrightness(value ? 100 : 0);
+      if (Boolean(value) === true) {
+        // Check if device already on
+        if (Boolean(value) === this.rgbOn && this.deviceStatus.on) {
+          this.debug && this.platform.log.info('Characteristic On is already ->', value);
+          return;
+        }
+        // Set device on
+        await this.device.on();
+      } else {
+        if (Boolean(value) === this.rgbOn && !this.deviceStatus.on) {
+          this.debug && this.platform.log.info('Characteristic On is already ->', value);
+          return;
+        }
+        // Set device off
+        await this.device.off();
+      }
+      // Sync local rgb status
       this.rgbOn = Boolean(value);
 
       this.debug && this.platform.log.info('Set Characteristic On ->', value);
